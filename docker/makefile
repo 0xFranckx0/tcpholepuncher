@@ -6,7 +6,7 @@ TAG = 1-0
 TESTDIR=/opt/thp/tests/.libs
 INSTALLBINDIR=/usr/local/bin
 
-TESTPROGR?=setuptest
+TESTPROGR?=unittests
 INSTALLPROGR?=punchctl
 
 build:	
@@ -27,7 +27,7 @@ punch:
 
 leaks-test:
 	# Can be used by passing the program name by the command line
-	# make leaks-test TESTPROGR=setuptest
+	# make leaks-test TESTPROGR=unittests
 	sudo docker exec -t -i $(IMAGE) valgrind --leak-check=full --show-reachable=yes $(TESTDIR)/$(TESTPROGR)
 leaks-bin:		
 	# Can be used by passing the program name by the command line
