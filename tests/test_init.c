@@ -29,17 +29,13 @@ int
 main()
 {
         struct thp_punch *punch = NULL;
-        punch = test_punch("192.168.0.12", "10000", NULL);
-        if (punch == NULL) {
-                log_error("Punch failed");
-        }
-        punch = test_punch("192.168.0.12", "10000", "tcp");
+
+        punch = test_punch("192.168.0.12", "10000,333,444", "tcp");
         if (punch == NULL) {
                 log_error("Punch failed");
         }
         return 0;
 }
-
 struct thp_punch *
 test_punch(char *address, char *ports, char *type)
 {

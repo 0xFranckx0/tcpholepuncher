@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <limits.h>
+#include <string.h>
 
 #include <thp.h>
 
@@ -32,7 +33,7 @@ thp_punch_start(const char * address, const char *ports, const char *type,
                         log_error("Missing parameters to call the punch");
                         goto error;
                 }
-
+        punch_init(address, ports, type);
         return punch;
 
         error:
@@ -77,12 +78,29 @@ int
 parse_ports(const char *ports_str)
 {
         int code = 0;
-
-
+        int port;
+        char *token = NULL;
+        char *current = strdup(ports_str);
+        char *p;
+        
         LIST_INIT(&head);
-        return code;
-}
+        token = strtok (current,",");
+        while (token != NULL){
+                port = str2int(token);
+                if (port < 0) {
+                        log_error("An error occured while converting port to an integer");
+                        code = port;
+                        goto cleanup;
+                }
+                token = strtok (NULL, ",");
+        }
+  
+        cleanup:
+                if (current != NULL)
+                        free(current);
 
+                return code;
+}
 
 int
 str2int(char *str)
