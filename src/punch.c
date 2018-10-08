@@ -66,11 +66,21 @@ punch_init(const char *address, const char *ports, const char *type)
                 return PUNCH_FAILURE;
 }
 
+/*
+ * parse_ports:
+ *      string format: 10,12-34,450,5000,4000-4010
+ *      Each comma delimits a token. If the token 
+ *      contains a dash it will mean a range including
+ *
+ */
 int
 parse_ports(const char *ports_str)
 {
+        int code = 0;
+
+
         LIST_INIT(&head);
-        return 0;
+        return code;
 }
 
 

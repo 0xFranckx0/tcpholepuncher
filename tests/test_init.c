@@ -24,9 +24,9 @@ punch_cb(int event, int sock, void *data) {
 }
 
 static struct thp_punch *test_punch(char *, char *, char *);
-static 
 
-int main()
+int 
+main()
 {
         struct thp_punch *punch = NULL;
         punch = test_punch("192.168.0.12", "10000", NULL);
@@ -39,7 +39,6 @@ int main()
         }
         return 0;
 }
-
 
 struct thp_punch *
 test_punch(char *address, char *ports, char *type)
