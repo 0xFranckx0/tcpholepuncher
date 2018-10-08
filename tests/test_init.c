@@ -8,27 +8,47 @@
 const char *msg_01 = "test-init: ";
 
 void
-log_01(const char *msg)
+log_warn(const char *msg)
 {
-	if (strncmp(msg, msg_01, strlen(msg_01)) != 0)
-		exit(-1);
+        fprintf(stdout, "WARNING: %s\n", msg);
 }
 
+void
+log_error(const char *msg)
+{
+        fprintf(stderr, "ERROR: %s\n", msg);
+}
 void
 punch_cb(int event, int sock, void *data) {
         
 }
 
+static struct thp_punch *test_punch(char *, char *, char *);
+
 int main()
 {
-        struct thp_punch *punch;
-
-	thp_log_setcb(log_01);
-        punch = thp_punch_start("192.168.0.12", "10000", "tcp", punch_cb, NULL);
+        struct thp_punch *punch = NULL;
+        punch = test_punch("192.168.0.12", "10000", NULL);
         if (punch == NULL) {
-                perror("Failed to init the punch");
-                return -1;
+                log_error("Punch failed");
         }
-
+        punch = test_punch("192.168.0.12", "10000", "tcp");
+        if (punch == NULL) {
+                log_error("Punch failed");
+        }
         return 0;
+}
+
+
+struct
+thp_punch *test_punch(char *address, char *ports, char *type)
+{
+        struct thp_punch *punch = NULL;
+
+	thp_log_setcb(log_warn, log_error);
+        punch = thp_punch_start(address, ports, type, punch_cb, NULL);
+        if (punch == NULL)
+                return NULL;
+
+        return punch;
 }
