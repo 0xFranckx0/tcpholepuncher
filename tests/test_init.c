@@ -24,6 +24,7 @@ punch_cb(int event, int sock, void *data) {
 }
 
 static struct thp_punch *test_punch(char *, char *, char *);
+static 
 
 int main()
 {
@@ -40,8 +41,8 @@ int main()
 }
 
 
-struct
-thp_punch *test_punch(char *address, char *ports, char *type)
+struct thp_punch *
+test_punch(char *address, char *ports, char *type)
 {
         struct thp_punch *punch = NULL;
 
