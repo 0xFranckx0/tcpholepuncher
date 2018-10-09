@@ -13,8 +13,10 @@ struct thp_punch {
 
 };
 
+struct port_list;
 struct entry {
         int port;
+        char *port_str;
         LIST_ENTRY(entry) entries;
 };
 LIST_HEAD(port_list, entry) head;
@@ -22,6 +24,9 @@ LIST_HEAD(port_list, entry) head;
 static int punch_init(const char *, const char *, const char *);
 static int parse_ports(const char *);
 static int str2int(char *);
+static void free_port_list(struct port_list *);
+static void delete_entry(struct entry *);
+static void print_port_list(struct port_list *);
 
 struct thp_punch *
 thp_punch_start(const char * address, const char *ports, const char *type, 
@@ -72,30 +77,49 @@ punch_init(const char *address, const char *ports, const char *type)
  *      string format: 10,12-34,450,5000,4000-4010
  *      Each comma delimits a token. If the token 
  *      contains a dash it will mean a range including
- *
  */
 int
 parse_ports(const char *ports_str)
 {
         int code = 0;
-        int port;
+        int port, counter = 0;
         char *token = NULL;
         char *current = strdup(ports_str);
         char *p;
+        struct entry *port_entry;
         
         LIST_INIT(&head);
         token = strtok (current,",");
         while (token != NULL){
-                port = str2int(token);
-                if (port < 0) {
-                        log_error("An error occured while converting port to an integer");
-                        code = port;
+                port_entry = malloc(sizeof(struct entry));
+                if (port_entry == NULL) {
+                        log_error("malloc failed while allocating memory for \
+                                   port_entry");
                         goto cleanup;
                 }
+                port_entry->port_str = strdup(token);
+                if (port_entry == NULL){
+                        log_error("strdup failed while duplicating token");
+                        if (counter == 0)
+                                free(port_entry);
+                        goto cleanup;
+                }
+                port_entry->port = str2int(token);
+                if (port_entry->port < 0) {
+                        log_error("An error occured while converting port \
+                                   to an integer");
+                        code = port_entry->port;
+                        goto cleanup;
+                }
+                LIST_INSERT_HEAD(&head, port_entry, entries);
                 token = strtok (NULL, ",");
+                counter++;
         }
-  
+        print_port_list(&head);
+
         cleanup:
+                if (counter > 0)
+                        free_port_list(&head);
                 if (current != NULL)
                         free(current);
 
@@ -121,4 +145,38 @@ str2int(char *str)
         }
 
         return (int)lval;
+}
+
+void
+free_port_list(struct port_list *list)
+{
+        struct entry *e;
+
+        while (!LIST_EMPTY(list)) {
+                e = LIST_FIRST(list);
+                LIST_REMOVE(e, entries);
+                delete_entry(e);
+        }
+}
+
+void
+delete_entry(struct entry *e)
+{
+        if (e != NULL){
+                if (e->port_str != NULL)
+                        free(e->port_str);
+
+                free(e);
+        }
+}
+
+void
+print_port_list(struct port_list *list)
+{
+        struct entry *e;
+        if (list != NULL){
+                LIST_FOREACH(e, list, entries)
+                        printf("Port string: %s\nPort Integer: %d\n",
+                                 e->port_str, e->port);
+        }
 }
