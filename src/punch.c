@@ -4,25 +4,30 @@
 #include <limits.h>
 #include <string.h>
 
+#include <event2/event.h>
+
 #include <thp.h>
 
 #include "log.h"
+#include "net.h"
 #include "queue.h"
 
+#define MINPORT 0
+#define MAXPORT 65535
 struct thp_punch {
 
 };
 
 struct port_list;
 struct entry {
-        int port;
+        evutil_socket_t sock;
         char *port_str;
         LIST_ENTRY(entry) entries;
 };
 LIST_HEAD(port_list, entry) head;
 
 static int punch_init(const char *, const char *, const char *);
-static int parse_ports(const char *);
+static int parse_ports(const char *, const char *);
 static int str2int(char *);
 static void free_port_list(struct port_list *);
 static void delete_entry(struct entry *);
@@ -60,7 +65,7 @@ punch_init(const char *address, const char *ports, const char *type)
 {
         int err;
 
-        err = parse_ports(ports);
+        err = parse_ports(address, ports);
         if (err < 0){
                 log_error("an error occured while parsing ports");
                 goto error;
@@ -79,7 +84,7 @@ punch_init(const char *address, const char *ports, const char *type)
  *      contains a dash it will mean a range including
  */
 int
-parse_ports(const char *ports_str)
+parse_ports(const char *address, const char *ports_str)
 {
         int code = 0;
         int port, counter = 0;
@@ -104,12 +109,9 @@ parse_ports(const char *ports_str)
                                 free(port_entry);
                         goto cleanup;
                 }
-                port_entry->port = str2int(token);
-                if (port_entry->port < 0) {
-                        log_error("An error occured while converting port \
-                                   to an integer");
-                        code = port_entry->port;
-                        goto cleanup;
+                port = str2int(token);
+                if (port > MINPORT && port < MAXPORT) {
+                        port_entry->sock = new_receiver(address, port_entry->port_str);
                 }
                 LIST_INSERT_HEAD(&head, port_entry, entries);
                 token = strtok (NULL, ",");
@@ -176,7 +178,6 @@ print_port_list(struct port_list *list)
         struct entry *e;
         if (list != NULL){
                 LIST_FOREACH(e, list, entries)
-                        printf("Port string: %s\nPort Integer: %d\n",
-                                 e->port_str, e->port);
+                        printf("Port string: %s\n", e->port_str);
         }
 }
