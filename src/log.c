@@ -16,7 +16,7 @@ thp_log_setcb(thp_logcb log_warn, thp_logcb_err log_error)
 }
 
 void
-log_warn(const char *format, ...)
+log_warnx(const char *format, ...)
 {
 	va_list		 list;
 	static char	 buff[512];
@@ -33,7 +33,7 @@ log_warn(const char *format, ...)
 }
 
 void
-log_warnx(const char *format, ...)
+log_warn(const char *format, ...)
 {
 	va_list		 list;
 	static char	 buff[512];
