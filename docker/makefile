@@ -38,3 +38,44 @@ debugger-test:
 	# Can be used by passing the program name by the command line
 	# make debugger-test INSTALLPROGR=puncher
 	sudo docker exec -t -i $(IMAGE) cgdb $(TESTDIR)/$(TESTPROGR)
+
+indent:
+	#indent -st -bap -bli0 -i4 -l79 -ncs -npcs -npsl -fca -lc79 -fc1 -ts4 $(SRCFILE)
+	indent -nbad -bap -nbc -bbo -hnl -br -brs -c33 -cd33 -ncdb -ce -ci4 -cli0 -d0 -di1 -nfc1 -i8 -ip0 -l80 -lp -npcs -nprs -sai -saf -saw -ncs -nsc -sob -nfca -cp33 -ss -ts8 -il1
+
+-nbad --no-blank-lines-after-declarations
+-bap --blank-lines-after-procedures
+-nbc --no-blank-lines-after-commas
+-br -braces-on-if-line
+-brs --braces-on-struct-decl-line
+-c33 --comment-indentation 33
+-cd33 --declaration-comment-columnn 33
+-ncdb --no-comment-delimiters-on-blank-lines
+-ce 
+-ci4 
+-cli0 
+-d0 
+-di1 
+-nfc1 
+-i8 
+-ip0 
+-l80 
+-nbbo 
+-nhnl 
+-lp 
+-npcs 
+-nprs 
+-sai 
+-saf 
+-saw 
+-ncs 
+-nsc 
+-sob 
+-nfca 
+-cp33 
+-ss 
+-ts8 
+-il1 
+-nut 
+-bfda 
+-lp
