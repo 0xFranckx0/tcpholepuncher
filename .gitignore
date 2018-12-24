@@ -54,7 +54,10 @@ m4/
 prototest
 punchctl
 setuptest
+lindent.sh
 
+*.c~
+*.h~
 *.o
 .deps/
 src/.deps
@@ -64,6 +67,8 @@ src/*.so
 src/*.Po
 src/*.Plo
 src/*.o
+src/*.c~
+src/*.h~
 tests/.deps
 tests/.dirstamp
 tests/*.lo
@@ -71,6 +76,8 @@ tests/*.so
 tests/*.Po
 tests/*.Plo
 tests/*.o
+tests/*.c~
+tests/*.h~
 include/.deps
 include/.dirstamp
 include/*.lo
@@ -78,6 +85,8 @@ include/*.so
 include/*.Po
 include/*.Plo
 include/*.o
+include/*.c~
+include/*.h~
 
 
 tests/unittests

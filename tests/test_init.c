@@ -4,7 +4,6 @@
 
 #include <thp.h>
 
-
 const char *msg_01 = "test-init: ";
 
 void
@@ -18,14 +17,16 @@ log_error(const char *msg)
 {
         fprintf(stderr, "ERROR: %s\n", msg);
 }
+
 void
-punch_cb(int event, int sock, void *data) {
-        
+punch_cb(int event, int sock, void *data)
+{
+
 }
 
 static struct thp_punch *test_punch(char *, char *, char *);
 
-int 
+int
 main()
 {
         struct thp_punch *punch = NULL;
@@ -36,12 +37,13 @@ main()
         }
         return 0;
 }
+
 struct thp_punch *
 test_punch(char *address, char *ports, char *type)
 {
         struct thp_punch *punch = NULL;
 
-	thp_log_setcb(log_warn, log_error);
+        thp_log_setcb(log_warn, log_error);
         punch = thp_punch_start(address, ports, type, punch_cb, NULL);
         if (punch == NULL)
                 return NULL;

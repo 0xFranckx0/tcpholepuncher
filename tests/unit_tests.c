@@ -3,14 +3,15 @@
 
 static void unit_test_list_setup();
 
-int main()
+int
+main()
 {
         unit_test_list_setup();
 
         return 0;
 }
 
-void 
+void
 unit_test_list_setup()
 {
 
